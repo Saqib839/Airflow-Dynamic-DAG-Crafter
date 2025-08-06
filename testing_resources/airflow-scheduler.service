@@ -1,0 +1,14 @@
+[Unit]
+Description=Airflow Scheduler
+After=network.target
+
+[Service]
+Environment="AIRFLOW_HOME=/home/airflow"
+User=airflow
+Group=airflow
+ExecStart=/home/airflow/.local/bin/airflow scheduler
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
