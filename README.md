@@ -27,7 +27,10 @@ Follow testing_resources/database.sql
 ```
 This file dynamically generates DAGs from MySQL metadata.
 
-## Step.4 --- Start Airflow Services
+## Step.4 --- Pull repo 
+Pull your github repo inside Github folder besides dags folder in airflow directory.
+
+## Step.5 --- Start Airflow Services
 ```
 airflow scheduler
 airflow webserver --port 8080
