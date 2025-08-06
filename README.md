@@ -27,10 +27,11 @@ Follow testing_resources/database.sql
 ```
 This file dynamically generates DAGs from MySQL metadata.
 
-## Step.4 --- Pull repo 
-Pull your github repo inside Github folder besides dags folder in airflow directory.
+## Step.4 --- Clone Your ETL Repository
+Clone your project-specific ETL repository into the Github/ directory (create one if not available) located alongside the dags/ folder within the Airflow home directory.
 
 ## Step.5 --- Start Airflow Services
+Run scheduler & webserver keep them both running.
 ```
 airflow scheduler
 airflow webserver --port 8080
