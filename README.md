@@ -5,7 +5,7 @@ No need to create static DAG files for each workflow. You can control:
   -  Tasks (Bash/Python) → via task_metadata table
 Airflow dynamically generates and updates DAGs based on the database metadata.
 
-# Features
+## Features
 - No static DAG files required per workflow.
 - Define and manage pipelines & tasks directly from MySQL tables.
 - Supports BashOperator and PythonOperator.
@@ -23,7 +23,7 @@ Follow testing_resources/database.sql
 
 ## Step.3 --- Place dag_factory.py in Airflow DAGs Folder
 ```
-    ~/airflow/dags/dag_factory.py
+~/airflow/dags/dag_factory.py
 ```
 This file dynamically generates DAGs from MySQL metadata.
 
@@ -39,7 +39,7 @@ Access Airflow UI at: http://localhost:8080
 
 # dags/dag_factory.py
 The dag_factory.py file is the engine that dynamically creates Airflow DAGs by reading pipeline and task metadata from the MySQL database.
-## Key Responsibilities of dag_factory.py
+Key Responsibilities
 - Connects to MySQL to fetch pipeline and task metadata.
 - Dynamically creates Airflow DAGs based on pipeline configurations.
 - Adds BashOperator and PythonOperator tasks from metadata.
@@ -77,7 +77,7 @@ The dag_factory.py file is the engine that dynamically creates Airflow DAGs by r
 
 ------------------------------------------------------------------------------------------------------------
 
-## testing_resources/airflow-scheduler.service, airflow-webserver.service, enable_services.sh 
+# testing_resources/airflow-scheduler.service, airflow-webserver.service, enable_services.sh 
 testing_resources/
  ├── airflow-scheduler.service    # systemd service file for Airflow Scheduler
  ├── airflow-webserver.service    # systemd service file for Airflow Webserver
