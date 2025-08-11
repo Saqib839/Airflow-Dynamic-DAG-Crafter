@@ -42,7 +42,7 @@ Run scheduler & webserver keep them both running.
 airflow scheduler
 airflow webserver --port 8080
 ```
-Access Airflow UI at: http://localhost:8080
+Access Airflow UI at: http://localhost:8080clea
 
 
 ------------------------------------------------------------------------------------------------------------
