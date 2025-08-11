@@ -1,0 +1,30 @@
+# Central configuration for DAG factory
+# Edit values as needed; Airflow will pick them up on the next DAG parse.
+
+# Path configuration
+PATHS:
+  BASE_SCRIPT_DIR: ../Github  # Relative to dag_factory.py location
+  # Alternative: Use absolute paths
+  # BASE_SCRIPT_DIR: /home/root_user/airflow/Github
+
+# MySQL connection configuration
+MYSQL_HOST: localhost
+MYSQL_PORT: 3306
+MYSQL_USER: airflow
+MYSQL_PASSWORD: airflow
+MYSQL_DB: airflow_metadata
+
+# Database table names
+PIPELINE_TABLE: pipeline_metadata
+TASK_TABLE: task_metadata
+
+# Default DAG arguments
+DEFAULT_OWNER: airflow
+DEFAULT_START_DATE_DAYS_AGO: 1
+DEFAULT_RETRIES: 1
+DEFAULT_RETRY_DELAY_MINUTES: 5
+
+# DAG behavior settings
+CATCHUP: false
+DAG_DESCRIPTION_FALLBACK: ""
+

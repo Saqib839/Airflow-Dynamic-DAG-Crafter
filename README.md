@@ -21,13 +21,25 @@ Follow the official installation guide: https://airflow.apache.org/docs/apache-a
 Install mysql server and create Database, Tables, and User.
 Follow testing_resources/database.sql
 
-## Step.3 --- Place dag_factory.py in Airflow DAGs Folder
+## Step.3 --- Configure the DAG Factory
+Create the configuration file:
+```
+    ~/airflow/dags/config.yml
+```
+This file contains all configurable settings for the DAG factory including:
+- MySQL connection details
+- Database table names
+- Default DAG arguments
+- Script directory paths
+- DAG behavior settings
+
+## Step.4 --- Place dag_factory.py in Airflow DAGs Folder
 ```
     ~/airflow/dags/dag_factory.py
 ```
-This file dynamically generates DAGs from MySQL metadata.
+This file dynamically generates DAGs from MySQL metadata using the configuration from `config.yml`.
 
-## Step.4 --- Start Airflow Services
+## Step.5 --- Start Airflow Services
 ```
 airflow scheduler
 airflow webserver --port 8080
@@ -37,7 +49,38 @@ Access Airflow UI at: http://localhost:8080
 
 ------------------------------------------------------------------------------------------------------------
 
-# dags/dag_factory.py
+# Configuration
+
+## dags/config.yml
+The configuration file contains all settings for the DAG factory:
+```yaml
+# Path configuration
+PATHS:
+  BASE_SCRIPT_DIR: ../Github  # Script directory path
+
+# MySQL connection configuration
+MYSQL_HOST: localhost
+MYSQL_PORT: 3306
+MYSQL_USER: airflow
+MYSQL_PASSWORD: airflow
+MYSQL_DB: airflow_metadata
+
+# Database table names
+PIPELINE_TABLE: pipeline_metadata
+TASK_TABLE: task_metadata
+
+# Default DAG arguments
+DEFAULT_OWNER: airflow
+DEFAULT_START_DATE_DAYS_AGO: 1
+DEFAULT_RETRIES: 1
+DEFAULT_RETRY_DELAY_MINUTES: 5
+
+# DAG behavior settings
+CATCHUP: false
+DAG_DESCRIPTION_FALLBACK: ""
+```
+
+## dags/dag_factory.py
 The dag_factory.py file is the engine that dynamically creates Airflow DAGs by reading pipeline and task metadata from the MySQL database.
 ## Key Responsibilities of dag_factory.py
 - Connects to MySQL to fetch pipeline and task metadata.

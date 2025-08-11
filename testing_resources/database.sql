@@ -39,7 +39,7 @@ FLUSH PRIVILEGES;
 -- Insert Pipelines
 INSERT INTO pipeline_metadata (pipeline_id, pipeline_name, schedule_time, schedule_period, pipeline_dependency, description) VALUES
 (1, 'etl_pipeline', '03:00:00', 'daily', NULL, 'ETL Pipeline Example'),
-(2, 'validate_pipeline', '04:00:00', 'daily', NULL, 'Validation Pipeline Example');
+(2, 'validate_pipeline', '04:00:00', 'daily', 'etl_pipeline', 'Validation Pipeline Example');
 
 
 ---------------------------------------------Task Metadata---------------------------------------------

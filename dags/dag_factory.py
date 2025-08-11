@@ -7,9 +7,34 @@ import importlib.util
 import sys
 import os
 from datetime import timedelta
+from typing import Dict, Any
 
-# Base path to the Github folder inside airflow directory
-BASE_SCRIPT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../Github'))
+def load_config() -> Dict[str, Any]:
+    """Load configuration from config.yml file"""
+    config_path = os.path.join(os.path.dirname(__file__), "config.yml")
+    try:
+        import yaml
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = yaml.safe_load(f) or {}
+            return config
+    except ImportError:
+        print("Warning: PyYAML not installed. Using default configuration.")
+        return {}
+    except Exception as e:
+        print(f"Warning: Could not load config.yml: {e}")
+        return {}
+
+# Load configuration
+CONFIG = load_config()
+
+# Calculate paths once
+script_dir = CONFIG["PATHS"]["BASE_SCRIPT_DIR"]
+if os.path.isabs(script_dir):
+    BASE_SCRIPT_DIR = script_dir
+else:
+    BASE_SCRIPT_DIR = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), script_dir)
+    )
 
 def dynamic_import(func_name, module_path):
     spec = importlib.util.spec_from_file_location("dynamic_module", module_path)
@@ -33,18 +58,21 @@ def get_schedule_interval(schedule_period, schedule_time):
 
 def fetch_metadata():
     conn = mysql.connector.connect(
-        host='localhost',
-        user='airflow',
-        password='airflow',
-        database='airflow_metadata'
+        host=CONFIG["MYSQL_HOST"],
+        port=CONFIG["MYSQL_PORT"],
+        user=CONFIG["MYSQL_USER"],
+        password=CONFIG["MYSQL_PASSWORD"],
+        database=CONFIG["MYSQL_DB"],
     )
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM pipeline_metadata")
+    cursor.execute(f"SELECT * FROM {CONFIG['PIPELINE_TABLE']}")
     pipelines = cursor.fetchall()
 
     pipeline_task_map = {}
     for pipeline in pipelines:
-        cursor.execute(f"SELECT * FROM task_metadata WHERE pipeline_id = {pipeline['pipeline_id']} ORDER BY task_order ASC")
+        cursor.execute(
+            f"SELECT * FROM {CONFIG['TASK_TABLE']} WHERE pipeline_id = {pipeline['pipeline_id']} ORDER BY task_order ASC"
+        )
         tasks = cursor.fetchall()
         pipeline_task_map[pipeline['pipeline_name']] = {
             'pipeline': pipeline,
@@ -61,10 +89,10 @@ def create_dags():
         tasks = metadata['tasks']
 
         default_args = {
-            'owner': 'airflow',
-            'start_date': days_ago(1),
-            'retries': 1,
-            'retry_delay': timedelta(minutes=5)
+            'owner': CONFIG["DEFAULT_OWNER"],
+            'start_date': days_ago(CONFIG["DEFAULT_START_DATE_DAYS_AGO"]),
+            'retries': CONFIG["DEFAULT_RETRIES"],
+            'retry_delay': timedelta(minutes=CONFIG["DEFAULT_RETRY_DELAY_MINUTES"]),
         }
 
         schedule_interval = get_schedule_interval(pipeline['schedule_period'], str(pipeline['schedule_time']))
@@ -73,8 +101,8 @@ def create_dags():
             dag_id=pipeline_name,
             default_args=default_args,
             schedule_interval=schedule_interval,
-            catchup=False,
-            description=pipeline['description']
+            catchup=CONFIG["CATCHUP"],
+            description=pipeline.get('description') or CONFIG["DAG_DESCRIPTION_FALLBACK"],
         )
 
         task_objects = {}
