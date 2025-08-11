@@ -34,7 +34,7 @@ This file contains all configurable settings for the DAG factory including:
 - DAG behavior settings
 
 ## Step.4 --- Clone Your ETL Repository
-Clone your project-specific ETL repository into the Github/ directory (create one if not available) located alongside the dags/ folder within the Airflow home directory.
+Clone your project-specific ETL repository into the Github/ directory (create one if not available) located alongside the dags/ folder within the Airflow home directory. Or give absolute path of ETL directory in config.yml file so dag_factory reads from absolute path instead.
 
 ## Step.5 --- Start Airflow Services
 Run scheduler & webserver keep them both running.
