@@ -33,13 +33,11 @@ This file contains all configurable settings for the DAG factory including:
 - Script directory paths
 - DAG behavior settings
 
-## Step.4 --- Place dag_factory.py in Airflow DAGs Folder
-```
-~/airflow/dags/dag_factory.py
-```
-This file dynamically generates DAGs from MySQL metadata using the configuration from `config.yml`.
+## Step.4 --- Clone Your ETL Repository
+Clone your project-specific ETL repository into the Github/ directory (create one if not available) located alongside the dags/ folder within the Airflow home directory.
 
 ## Step.5 --- Start Airflow Services
+Run scheduler & webserver keep them both running.
 ```
 airflow scheduler
 airflow webserver --port 8080
